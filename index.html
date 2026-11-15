@@ -4,210 +4,88 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101313">
-  <meta name="description" content="Dotkni se číselné dlaždice a sleduj svůj poslední tah.">
-  <title>Číselná hra</title>
+  <meta name="description" content="Celoobrazovková číselná mřížka.">
+  <title>Číselná mřížka</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #101313;
-      --panel: #191e1d;
-      --panel-soft: #202726;
-      --text: #f4f5ef;
-      --muted: #9ba6a1;
-      --accent: #c7f36b;
-      --accent-ink: #17200d;
-      --line: rgba(255,255,255,.09);
-      --gap: clamp(6px, 1.65vw, 12px);
+      background: #101313;
+      --gap: clamp(2px, .8vw, 7px);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
     }
     * { box-sizing: border-box; }
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       margin: 0;
-      min-height: 100svh;
-      background:
-        radial-gradient(ellipse at 50% -15%, rgba(199,243,107,.12), transparent 42%),
-        var(--bg);
+      overflow: hidden;
+      overscroll-behavior: none;
     }
-    button, input { font: inherit; }
-    .app {
-      width: min(100%, 700px);
-      min-height: 100svh;
-      margin-inline: auto;
-      padding: max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 11px; }
-    .brand-mark {
-      width: 39px; height: 39px; display: grid; place-items: center;
-      border-radius: 13px; background: var(--accent); color: var(--accent-ink);
-      font-weight: 900; font-size: 19px; transform: rotate(-5deg);
-    }
-    h1 { margin: 0; font-size: 17px; letter-spacing: -.03em; }
-    .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: .13em; font-size: 10px; font-weight: 700; }
-    .round-button {
-      min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 14px;
-      color: var(--text); background: var(--panel); cursor: pointer; display: grid; place-items: center;
-      transition: transform .15s, border-color .15s;
-    }
-    .round-button:active { transform: scale(.94) rotate(-20deg); }
-    .intro { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
-    .intro h2 { margin: 3px 0 0; font-size: clamp(24px, 6vw, 34px); letter-spacing: -.055em; line-height: 1.04; }
-    .intro p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
-    .count-badge { border: 1px solid var(--line); border-radius: 99px; padding: 8px 11px; color: var(--muted); font-size: 12px; white-space: nowrap; }
-    .count-badge strong { color: var(--text); }
-    .settings {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: rgba(25,30,29,.8);
-    }
-    .settings-label { color: var(--muted); font-size: 12px; }
-    .dimension-fields { display: flex; align-items: center; gap: 8px; }
-    .dimension-fields label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; }
-    .dimension-fields input {
-      width: 46px; height: 36px; border-radius: 10px; border: 1px solid var(--line);
-      background: var(--bg); color: var(--text); text-align: center; outline: none;
-    }
-    .dimension-fields input:focus-visible { border-color: var(--accent); }
-    .dimension-fields span { color: #63706a; }
-    .grid-wrap { flex: 1; display: flex; align-items: center; }
+    body { background: #101313; }
     .grid {
-      width: 100%; display: grid; gap: var(--gap); grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+      gap: var(--gap);
+      padding: var(--gap);
     }
     .tile {
-      aspect-ratio: 1; min-width: 0; padding: 0; border: 1px solid rgba(255,255,255,.075);
-      border-radius: clamp(10px, 2.5vw, 17px); color: #e8ece5; background: var(--panel);
-      font-size: clamp(12px, calc(54vw / var(--cols)), 21px); font-weight: 750; font-variant-numeric: tabular-nums;
-      cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-      transition: background .16s, color .16s, transform .16s, border-color .16s, box-shadow .16s;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: clamp(5px, 2vw, 15px);
+      background: #191e1d;
+      color: #edf0e9;
+      font: 750 clamp(12px, 5vw, 26px)/1 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      transition: background-color .13s, color .13s, transform .13s, border-color .13s;
     }
-    .tile:active { transform: scale(.91); }
-    .tile:hover { border-color: rgba(199,243,107,.42); }
+    .tile:active { transform: scale(.94); }
     .tile.is-selected {
-      color: var(--accent-ink); background: var(--accent); border-color: var(--accent);
-      box-shadow: 0 5px 22px rgba(199,243,107,.17); transform: scale(1.035);
+      color: #17200d;
+      background: #c7f36b;
+      border-color: #c7f36b;
     }
-    .tile:focus-visible, .round-button:focus-visible, .clear-button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
-    .result {
-      padding: 15px 17px; border: 1px solid var(--line); border-radius: 19px;
-      background: linear-gradient(135deg, #202726, #191e1d); display: flex; align-items: center; gap: 14px;
+    .tile:focus-visible { outline: 3px solid white; outline-offset: -4px; }
+    @media (prefers-reduced-motion: reduce) {
+      .tile { transition-duration: .01ms; }
     }
-    .result-icon {
-      width: 44px; height: 44px; flex: 0 0 auto; border-radius: 14px; display: grid; place-items: center;
-      color: var(--accent); background: rgba(199,243,107,.1); font-size: 19px;
-    }
-    .result-copy { min-width: 0; flex: 1; }
-    .result-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; font-weight: 750; }
-    .result-value { margin-top: 2px; font-size: 18px; font-weight: 750; letter-spacing: -.02em; }
-    .result-value.empty { color: #d3d8d1; font-size: 14px; font-weight: 550; letter-spacing: 0; }
-    .clear-button { border: 0; background: transparent; color: var(--muted); padding: 9px; border-radius: 10px; cursor: pointer; font-size: 12px; }
-    .clear-button:hover { background: rgba(255,255,255,.06); color: var(--text); }
-    footer { text-align: center; color: #68736e; font-size: 11px; margin-top: -9px; }
-    @media (min-width: 600px) {
-      .app { padding-inline: 28px; gap: 24px; }
-      .tile { font-size: clamp(18px, calc(48vw / var(--cols)), 25px); }
-    }
-    @media (max-height: 760px) {
-      .app { gap: 13px; padding-top: max(14px, env(safe-area-inset-top)); padding-bottom: max(14px, env(safe-area-inset-bottom)); }
-      .intro h2 { font-size: 25px; }
-      .result { padding-block: 11px; }
-    }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
   </style>
 </head>
 <body>
-  <main class="app">
-    <header>
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">#</div>
-        <div><div class="eyebrow">Rychlá hra</div><h1>Číselná mřížka</h1></div>
-      </div>
-      <button class="round-button" id="shuffle" type="button" aria-label="Zamíchat čísla" title="Zamíchat čísla">⤨</button>
-    </header>
-
-    <section class="intro" aria-label="Informace o hře">
-      <div><div class="eyebrow">Vyber si dlaždici</div><h2>Kam padne<br>tvůj prst?</h2><p>Klepni na libovolné číslo.</p></div>
-      <div class="count-badge"><strong id="tile-count">50</strong> polí</div>
-    </section>
-
-    <section class="settings" aria-label="Velikost mřížky">
-      <span class="settings-label">Velikost mřížky</span>
-      <div class="dimension-fields">
-        <label>Sloupce <input id="cols" type="number" min="2" max="10" value="5" inputmode="numeric"></label>
-        <span>×</span>
-        <label>Řádky <input id="rows" type="number" min="2" max="12" value="10" inputmode="numeric"></label>
-      </div>
-    </section>
-
-    <section class="grid-wrap" aria-label="Číselné dlaždice">
-      <div class="grid" id="grid" role="group" aria-label="Vyber číselnou dlaždici"></div>
-    </section>
-
-    <section class="result" aria-live="polite" aria-atomic="true">
-      <div class="result-icon" aria-hidden="true">↗</div>
-      <div class="result-copy">
-        <div class="result-label">Poslední stisk</div>
-        <div class="result-value empty" id="last">Zatím žádná dlaždice</div>
-      </div>
-      <button class="clear-button" id="clear" type="button">Vymazat</button>
-    </section>
-    <footer>Jedno klepnutí. Jedno číslo. A co teď?</footer>
-  </main>
-
+  <main class="grid" id="grid" aria-label="Číselné dlaždice"></main>
   <script>
+    // Rozměry mřížky změň zde. Sloupce × řádky = celkový počet dlaždic.
+    const COLUMNS = 5;
+    const ROWS = 10;
+
     const grid = document.querySelector('#grid');
-    const colsInput = document.querySelector('#cols');
-    const rowsInput = document.querySelector('#rows');
-    const lastOutput = document.querySelector('#last');
-    const tileCount = document.querySelector('#tile-count');
-    let shuffled = false;
+    grid.style.setProperty('--cols', COLUMNS);
+    grid.style.setProperty('--rows', ROWS);
 
-    function buildGrid() {
-      const cols = Math.min(10, Math.max(2, Number(colsInput.value) || 5));
-      const rows = Math.min(12, Math.max(2, Number(rowsInput.value) || 10));
-      colsInput.value = cols;
-      rowsInput.value = rows;
-      const values = Array.from({ length: cols * rows }, (_, i) => i + 1);
-      if (shuffled) {
-        for (let i = values.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [values[i], values[j]] = [values[j], values[i]];
-        }
-      }
-      grid.replaceChildren();
-      grid.style.setProperty('--cols', cols);
-      tileCount.textContent = values.length;
-      lastOutput.textContent = 'Zatím žádná dlaždice';
-      lastOutput.classList.add('empty');
-
-      values.forEach((number) => {
-        const button = document.createElement('button');
-        button.className = 'tile';
-        button.type = 'button';
-        button.textContent = number;
-        button.setAttribute('aria-label', `Dlaždice ${number}`);
-        button.addEventListener('click', () => {
-          grid.querySelector('.is-selected')?.classList.remove('is-selected');
-          button.classList.add('is-selected');
-          lastOutput.textContent = `Dlaždice č. ${number}`;
-          lastOutput.classList.remove('empty');
-        });
-        grid.append(button);
+    for (let number = 1; number <= COLUMNS * ROWS; number++) {
+      const tile = document.createElement('button');
+      tile.className = 'tile';
+      tile.type = 'button';
+      tile.textContent = number;
+      tile.setAttribute('aria-label', `Dlaždice ${number}`);
+      tile.setAttribute('aria-pressed', 'false');
+      tile.addEventListener('click', () => {
+        grid.querySelector('.is-selected')?.classList.remove('is-selected');
+        grid.querySelector('[aria-pressed="true"]')?.setAttribute('aria-pressed', 'false');
+        tile.classList.add('is-selected');
+        tile.setAttribute('aria-pressed', 'true');
       });
+      grid.append(tile);
     }
-
-    colsInput.addEventListener('change', buildGrid);
-    rowsInput.addEventListener('change', buildGrid);
-    document.querySelector('#shuffle').addEventListener('click', () => { shuffled = !shuffled; buildGrid(); });
-    document.querySelector('#clear').addEventListener('click', () => {
-      grid.querySelector('.is-selected')?.classList.remove('is-selected');
-      lastOutput.textContent = 'Zatím žádná dlaždice';
-      lastOutput.classList.add('empty');
-    });
-    buildGrid();
   </script>
 </body>
 </html>
